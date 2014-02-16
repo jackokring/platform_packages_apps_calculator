@@ -16,14 +16,17 @@ The first row is
   * ln gamma
   * dichrelet eta
   * riemann zeta
+
 The second row is useful utility functions
   * reciprical root
   * square
   * one minus value
+
 The third row is format conversion
   * imaginary over real as rational
   * convert to rational
   * factorize integer part on display
+
 The fourth row is context control functions
   * push
   * peek
