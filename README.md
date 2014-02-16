@@ -19,7 +19,7 @@ The first row is
 
 The second row is useful utility functions
   * reciprical root
-  * square
+  * square modulus
   * one minus value
 
 The third row is format conversion
