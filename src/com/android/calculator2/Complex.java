@@ -60,22 +60,45 @@ public class Complex {
 	}
 	
 	public Complex eta() {
-		if(x>0) {
-			
-			return this;
+		if(x>0.5) {
+			Complex o = new Complex(0, 0);
+			Complex e = new Complex(0, 0);
+			for(int n = 0; n < sum; n++) {
+				double d = Math.log(2*n+1);
+				Complex t = new Complex(-x*d, -y*d).exp();
+				t.addTo(o);
+				d = Math.log(2*n+2);
+				t = new Complex(-x*d, -y*d).exp();
+				t.addTo(e);
+			}
+			e.i().i();
+			e.addTo(o);
+			return o;
 		} else {
-			
-			return this;
+			Complex z = xfactor().ln();
+			zeta().ln().addTo(z);
+			return z.exp();
 		}
 	}
 	
-	public Complex zeta() {
+	private Complex xfactor() {
 		Complex s = new Complex(x, y).oneMinus();
-		Complex e = this.eta().ln();
 		double xy = Math.log(2);
-		s = new Complex(xy*s.x, xy*s.y).exp().oneMinus().ln();
-		e.addTo(s);
-		return s.exp();
+		s = new Complex(xy*s.x, xy*s.y).exp().oneMinus();
+		return s;
+	}
+	
+	public Complex zeta() {
+		if(x>1.0) {
+			Complex z = xfactor().ln().i().i();
+			eta().ln().addTo(z);
+			return z.exp();
+		} else {
+			//function reflection
+			Complex z = this.oneMinus().zeta();
+			//calculate scaling from gamma etc.
+			//????
+		}
 	}
 	
 	//advanced operations
