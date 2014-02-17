@@ -89,16 +89,36 @@ public class Complex {
 	}
 	
 	public Complex zeta() {
-		if(x>1.0) {
+		if(x>0.5) {
 			Complex z = xfactor().ln().i().i();
 			eta().ln().addTo(z);
 			return z.exp();
 		} else {
 			//function reflection
-			Complex z = this.oneMinus().zeta();
-			//calculate scaling from gamma etc.
-			//????
+			Complex z = (new Complex(x, y)).oneMinus();
+			Complex r = (new Complex(z.x, z.y)).zeta().ln();
+			(new Complex(z.x, z.y)).lnGamma().addTo(r);
+			double pi2 = Math.PI/2;
+			(new Complex(pi2*x, pi2*y)).sin().ln().addTo(r);
+			z.i().i().ln();
+			z.x *= Math.PI;
+			z.y *= Math.PI;
+			z.addTo(r);
+			ln();
+			x *= 2;
+			y *= 2;
+			addTo(r);
+			return r.exp();
 		}
+	}
+	
+	private Complex sin() {
+		i();
+		Complex t = (new Complex(x, y)).i().i().exp().i().i();
+		exp().addTo(t);
+		x = t.y/2;
+		y = t.x/2;
+		return this;
 	}
 	
 	//advanced operations
