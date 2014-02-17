@@ -15,7 +15,7 @@ The advanced keys are replaced by more advanced keys as would be expected in suc
 The first row is
   * ln gamma
   * dichrelet eta
-  * riemann zeta
+  * riemann zeta - includes some extra zeros due to calculation method on each edge of the critical strip
 
 The second row is useful utility functions
   * reciprical root
