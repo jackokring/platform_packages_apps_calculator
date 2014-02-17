@@ -23,7 +23,7 @@ public class Complex {
 	
 	public String display() {
 		if(alt == null) {
-			return Float.toString((float)y) + "/n" +
+			return Float.toString((float)y) + "\n" +
 					Float.toString((float)x);
 		}
 		return alt;
@@ -190,13 +190,14 @@ public class Complex {
 		} catch (Exception f) {
 			e = 0;
 		}
-		alt = factor(e) + "/n" + factor(t);
+		alt = factor(e) + "\n" + factor(t);
 		return this;
 	}
 	
 	private String factor(int x) {
 		String out = "";
 		int limit = (int)(Math.sqrt(x)+1);
+		if(x < 0) x = -x;//flip
 		if(x == 0) return "0";
 		if(x == 1) return "1";
 		while(x % 2 == 0) {
@@ -212,12 +213,38 @@ public class Complex {
 				}
 			}
 		}
-		return out;
+		return out.substring(0, out.length()-1);//drop dp
 	}
 	
-	public Complex eta() {
-		
+	public Complex frac() {
+		release();
+		alt = frac(y) + "\n" + frac(x);
 		return this;
+	}
+	
+	private String frac(double x) {
+		int t = (int)x;
+		String out = "";
+		if(t != 0) {
+			out += Integer.toString(t) + "/";
+			x -= t;
+		}
+		if(x == 0) return out.substring(0, out.length()-1);
+		//now for fractional part
+		int n;
+		int f = 2;
+		double err = 1.0;
+		for(int d = 2; d < 10000; d++) {
+			n = (int)(x*d);//get numerator
+			double rr = x - (0.0 + n)/d;
+			if(rr*rr < err) {
+				f = d;
+				err = rr*rr;
+			}
+		}
+		n = (int)(x*f);//get numerator
+		out += Integer.toString(n) + "/" + Integer.toString(f);
+		return out;
 	}
 	
 	public Complex zeta() {
