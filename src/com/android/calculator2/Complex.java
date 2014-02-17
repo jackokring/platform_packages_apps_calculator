@@ -182,11 +182,12 @@ public class Complex {
 	//row 3
 	public Complex factor() {
 		release();
-		ln();
-		int t = (int)Math.exp(x);
+		Complex z = new Complex(x, y);
+		z.ln();
+		int t = (int)Math.exp(z.x);
 		int e;
 		try {
-			e = (int)(2*Math.PI/y);
+			e = (int)(2*Math.PI/z.y);
 		} catch (Exception f) {
 			e = 0;
 		}
@@ -247,8 +248,24 @@ public class Complex {
 		return out;
 	}
 	
-	public Complex zeta() {
-		
+	public Complex polar() {
+		release();
+		Complex z = new Complex(x, y);
+		z.ln();
+		z.x = Math.exp(z.x);
+		//now for angle from rads
+		double t = z.y*180/Math.PI;//degrees
+		String out = Integer.toString((int)t) + "°";
+		t -= (int)t;
+		t *= 60;
+		out += Integer.toString((int)t) + "′";
+		t -= (int)t;
+		t *= 60;
+		out += Integer.toString((int)t) + ".";
+		t -= (int)t;
+		t *= 100;
+		out += Integer.toString((int)t) + "″";
+		out += "\n" + Float.toString((float)z.x);
 		return this;
 	}
 	

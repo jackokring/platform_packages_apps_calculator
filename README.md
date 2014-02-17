@@ -23,9 +23,9 @@ The second row is useful utility functions
   * squared
 
 The third row is format conversion
-  * factorize integer part on display
-  * 
-  * 
+  * factorize integer magnitude on display with angle parts of a circle
+  * convert to fraction
+  * convert to polar coordinates
 
 The fourth row is context control functions
   * push
