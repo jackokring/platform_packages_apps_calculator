@@ -1,33 +1,59 @@
 package com.android.calculator2;
 
+import java.util.Stack;
+
 public class Complex {
 
 	double x, y;
+	String alt;
 	final int sum = 4096;
+	public static Complex acc = new Complex(0, 0);
+	public static Stack<Complex> mem = new Stack<Complex>();
 	
 	public Complex(double xi, double yi) {
 		x = xi;
 		y = yi;
 	}
 	
-	public Complex addTo(Complex z) {
+	private Complex addTo(Complex z) {
 		z.x += x;
 		z.y += y;
-		return this;
+		return z;
+	}
+	
+	public String display() {
+		if(alt == null) {
+			return Float.toString((float)y) + "/n" +
+					Float.toString((float)x);
+		}
+		return alt;
+	}
+	
+	private void release() {
+		alt = null;
+	}
+	
+	//main key
+	public Complex addTo() {
+		release();
+		return addTo(acc);
 	}
 	
 	//basic
 	public Complex i() {
+		release();
 		x = -y;
 		y = x;
 		return this;
 	}
 	
 	public Complex k() {
+		release();
 		return this.ln().i().exp();
 	}
 	
 	public Complex exp() {
+		release();
 		double i = Math.exp(x);
 		x = Math.cos(y)*i;
 		y = Math.sin(y)*i;
@@ -35,6 +61,7 @@ public class Complex {
 	}
 	
 	public Complex ln() {
+		release();
 		double i = Math.log(Math.sqrt(x*x+y*y));
 		y = Math.atan2(y, x);
 		x = i;
@@ -44,6 +71,7 @@ public class Complex {
 	//advanced operations
 	//row 1
 	public Complex lnGamma() {
+		release();
 		//1/t*prod(n=1, inf, (1+1/n)^t/(1+t/n))
 		Complex acc = new Complex(0, 0);
 		for(int n = 1; n < sum; n++) {
@@ -60,6 +88,7 @@ public class Complex {
 	}
 	
 	public Complex eta() {
+		release();
 		if(x>0.5) {
 			Complex o = new Complex(0, 0);
 			Complex e = new Complex(0, 0);
@@ -89,6 +118,7 @@ public class Complex {
 	}
 	
 	public Complex zeta() {
+		release();
 		if(x>0.5) {
 			Complex z = xfactor().ln().i().i();
 			eta().ln().addTo(z);
@@ -99,7 +129,7 @@ public class Complex {
 			Complex r = (new Complex(z.x, z.y)).zeta().ln();
 			(new Complex(z.x, z.y)).lnGamma().addTo(r);
 			double pi2 = Math.PI/2;
-			(new Complex(pi2*x, pi2*y)).sin().ln().addTo(r);
+			(new Complex(pi2*z.x, pi2*z.y)).cos().ln().addTo(r);
 			z.i().i().ln();
 			z.x *= Math.PI;
 			z.y *= Math.PI;
@@ -112,18 +142,20 @@ public class Complex {
 		}
 	}
 	
-	private Complex sin() {
+	private Complex cos() {
 		i();
-		Complex t = (new Complex(x, y)).i().i().exp().i().i();
-		exp().addTo(t);
-		x = t.y/2;
-		y = t.x/2;
+		Complex t = (new Complex(x, y)).i().i().exp();
+		exp();
+		t.addTo(this);
+		x /= 2;
+		y /= 2;
 		return this;
 	}
 	
 	//advanced operations
 	//row 2
 	public Complex invRoot() {
+		release();
 		this.ln();
 		x = -x/2;
 		y = -y/2;
@@ -131,22 +163,56 @@ public class Complex {
 	}
 	
 	public Complex oneMinus() {
+		release();
 		x = 1 - x;
 		y = -y;
 		return this;
 	}
 	
-	public Complex modulus() {
-		x = x*x+y*y;
-		y = 0;
+	public Complex square() {
+		release();
+		ln();
+		x *= 2;
+		y *= 2;
+		exp();
 		return this;
 	}
 	
 	//advanced operations
 	//row 3
-	public Complex lnGamma() {
-		
+	public Complex factor() {
+		release();
+		ln();
+		int t = (int)Math.exp(x);
+		int e;
+		try {
+			e = (int)(2*Math.PI/y);
+		} catch (Exception f) {
+			e = 0;
+		}
+		alt = factor(e) + "/n" + factor(t);
 		return this;
+	}
+	
+	private String factor(int x) {
+		String out = "";
+		int limit = (int)(Math.sqrt(x)+1);
+		if(x == 0) return "0";
+		if(x == 1) return "1";
+		while(x % 2 == 0) {
+			out += "2.";
+			x /= 2;
+		}
+		if(x != 1) {
+			for(int n = 3; n < limit; n+=2) {
+				while(x % n == 0) {
+					out += Integer.toString(n) + ".";
+					x /= n;
+					if(x == 1) n = limit;
+				}
+			}
+		}
+		return out;
 	}
 	
 	public Complex eta() {
@@ -161,33 +227,21 @@ public class Complex {
 	
 	//advanced operations
 	//row 4
-	public Complex lnGamma() {
-		
+	public Complex push() {
+		mem.push(acc);
+		acc = new Complex(0, 0);
 		return this;
 	}
 	
-	public Complex eta() {
-		
+	public Complex pop() {
+		acc = mem.pop();
 		return this;
 	}
 	
-	public Complex zeta() {
-		
+	public Complex swap() {
+		Complex t = mem.pop();
+		mem.push(acc);
+		acc = t;
 		return this;
 	}
-	
-	/*
-	//other functions
-	//Algorithm Akiyama–Tanigawa algorithm for second Bernoulli numbers Bn
-	//Input: Integer n≥0.
-	//Output: Second Bernoulli number Bn.
-	public double bernoulli(int n) {
-		double[] a = new double[n];
-		for(int m = 0;  m < n+1 ; m++) {
-			a[m] = 1/(m+1);
-			for(int j = m; j > 0 ; j--)
-				a[j-1] = j*(a[j-1] - a[j]);
-		}
-		return a[0];
-	} */
 }

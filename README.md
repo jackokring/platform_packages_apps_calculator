@@ -15,19 +15,19 @@ The advanced keys are replaced by more advanced keys as would be expected in suc
 The first row is
   * ln gamma
   * dichrelet eta
-  * riemann zeta - includes some extra zeros due to calculation method on each edge of the critical strip
+  * riemann zeta - includes some extra poles due to calculation method on each edge of the critical strip
 
 The second row is useful utility functions
   * reciprical root
-  * square modulus
   * one minus value
+  * squared
 
 The third row is format conversion
-  * imaginary over real as rational
-  * convert to rational
   * factorize integer part on display
+  * 
+  * 
 
 The fourth row is context control functions
   * push
-  * peek
   * pop
+  * swap
