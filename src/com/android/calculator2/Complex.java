@@ -8,7 +8,66 @@ public class Complex {
 	String alt;
 	final int sum = 4096;
 	public static Complex acc = new Complex(0, 0);
+	public static Complex scr = new Complex(0, 0);//screen
 	public static Stack<Complex> mem = new Stack<Complex>();
+	
+	//dispatcher
+	final static String[] disp = {
+		//basic
+		"+",//0
+		"i",//1
+		"k",//2
+		"exp",//3
+		"ln",//4
+		//advanced
+		//r1
+		"lnΓ",//5
+		"η",//6
+		"ζ",//7
+		//r2
+		"1∕√x",//8
+		"1-x",//9
+		"x²",//10
+		//r3
+		"Πp",//11
+		"n∕d",//12
+		"°′″",//13
+		//r4
+		"psh",//14
+		"pop",//15
+		"swp"//16
+	};
+	
+	private int maxop = disp.length;
+	
+	public boolean dispatch(String s) {
+		int i = maxop;
+		for(int j = 0; j < maxop; j++) {
+			if(s.equals(disp[j])) i = j;//found
+		}
+		if(i == maxop) return false;//not found
+		switch(i) {
+		case 0: scr = scr.addTo(); break;
+		case 1: scr = scr.i(); break;
+		case 2: scr = scr.k(); break;
+		case 3: scr = scr.exp(); break;
+		case 4: scr = scr.ln(); break;
+		case 5: scr = scr.lnGamma(); break;
+		case 6: scr = scr.eta(); break;
+		case 7: scr = scr.zeta(); break;
+		case 8: scr = scr.invRoot(); break;
+		case 9: scr = scr.oneMinus(); break;
+		case 10: scr = scr.square(); break;
+		case 11: scr = scr.factor(); break;
+		case 12: scr = scr.frac(); break;
+		case 13: scr = scr.polar(); break;
+		case 14: scr = scr.push(); break;
+		case 15: scr = scr.pop(); break;
+		case 16: scr = scr.swap(); break;
+		default: break;
+		}
+		return true;
+	}
 	
 	public Complex(double xi, double yi) {
 		x = xi;
@@ -23,7 +82,7 @@ public class Complex {
 	
 	public String display() {
 		if(alt == null) {
-			return Float.toString((float)y) + "\n" +
+			return Float.toString((float)y) + "i\n" +
 					Float.toString((float)x);
 		}
 		return alt;
@@ -202,13 +261,13 @@ public class Complex {
 		if(x == 0) return "0";
 		if(x == 1) return "1";
 		while(x % 2 == 0) {
-			out += "2.";
+			out += "2×";
 			x /= 2;
 		}
 		if(x != 1) {
 			for(int n = 3; n < limit; n+=2) {
 				while(x % n == 0) {
-					out += Integer.toString(n) + ".";
+					out += Integer.toString(n) + "×";
 					x /= n;
 					if(x == 1) n = limit;
 				}
@@ -227,7 +286,7 @@ public class Complex {
 		int t = (int)x;
 		String out = "";
 		if(t != 0) {
-			out += Integer.toString(t) + "/";
+			out += Integer.toString(t) + "+";
 			x -= t;
 		}
 		if(x == 0) return out.substring(0, out.length()-1);
@@ -244,7 +303,7 @@ public class Complex {
 			}
 		}
 		n = (int)(x*f);//get numerator
-		out += Integer.toString(n) + "/" + Integer.toString(f);
+		out += Integer.toString(n) + "∕" + Integer.toString(f);
 		return out;
 	}
 	
