@@ -38,7 +38,7 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 
 public class Calculator extends Activity implements PanelSwitcher.Listener, Logic.Listener,
         OnClickListener, OnMenuItemClickListener {
-    EventListener mListener = new EventListener();
+    public EventListener mListener = new EventListener();
     private CalculatorDisplay mDisplay;
     private Persist mPersist;
     private History mHistory;

@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
             <!-- marginRight has to be 0 to catch border-touch -->
-            <com.android.calculator2.ColorButton
+            <com.android.sleepdream.ColorButton
                 android:id="@+id/clear"
                 android:text="@string/clear"
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                 android:minWidth="89dip"
                 />
             <!-- marginRight has to be 0 to catch border-touch -->
-            <com.android.calculator2.ColorButton
+            <com.android.sleepdream.ColorButton
                 android:id="@+id/del"
                 android:text="@string/del"
                 android:layout_width="match_parent"
